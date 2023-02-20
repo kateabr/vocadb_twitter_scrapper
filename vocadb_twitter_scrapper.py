@@ -163,7 +163,7 @@ for hashtag, file in filenames.items():
     print(f"#{hashtag}")
     b_format = "|{bar}| {percentage:3.0f}% {n_fmt}/{total_fmt} [{elapsed}<{remaining}, {rate_fmt}{postfix}]"
     with open(file, 'r', newline='', encoding='utf8') as tweets_csv:
-        tweets = tweets_csv.readlines()
+        tweets = tweets_csv.readlines()[start_at:]
 
     if end_date != "":
         for idx, tweet in enumerate(tweets):
@@ -186,9 +186,9 @@ for hashtag, file in filenames.items():
         for link in links:
             try:
                 with requests.Session() as session:
-                    resp = session.head(link, allow_redirects=True)
+                    resp = session.head(link, allow_redirects=True, timeout=10)
             except Exception as _:
-                results = update_report(results, parsed_tweet, "???", "Invalid link !!")
+                results = update_report(results, parsed_tweet, "???", "Failed to process link !!")
                 continue
             for parser in parsers:
                 if match(parser.regex, resp.url) is not None:
