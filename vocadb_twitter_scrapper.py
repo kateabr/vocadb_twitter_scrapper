@@ -180,7 +180,7 @@ for hashtag, file in filenames.items():
             continue
         tweet_text = parsed_tweet["rawContent"]
         links = findall(r"https://t.co/[^\s]+", tweet_text)
-        parsers = {LinkParser(r"https://www\.nicovideo\.jp/watch"),
+        parsers = {LinkParser(r"https://((www|sp)\.)?nicovideo\.jp/watch"),
                    LinkParser(r"https://www\.youtube\.com/watch"),
                    LinkParser(r"https://www\.bilibili\.com/video/")}
         for link in links:
