@@ -182,7 +182,8 @@ for hashtag, file in filenames.items():
         links = findall(r"https://t.co/[^\s]+", tweet_text)
         parsers = {LinkParser(r"https://((www|sp)\.)?nicovideo\.jp/watch"),
                    LinkParser(r"https://www\.youtube\.com/watch"),
-                   LinkParser(r"https://www\.bilibili\.com/video/")}
+                   LinkParser(r"https://www\.bilibili\.com/video/"),
+                   LinkParser(r"https://soundcloud\.com/(.+?)/")}
         for link in links:
             try:
                 with requests.Session() as session:
