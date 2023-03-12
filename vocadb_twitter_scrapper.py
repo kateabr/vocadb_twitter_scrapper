@@ -94,18 +94,17 @@ with (spinner := Halo()):
 
     if "webLinks" in event.keys():
         hashtags_temp = [match(r"https://twitter.com/hashtag/([^\?/]+)", link["url"]) for link in event["webLinks"]]
-        hashtags = [urllib.request.unquote(hashtag.group(1)) for hashtag in hashtags_temp if hashtag is not None]
-    if (len(hashtags) == 0) and ("series" in event.keys()):
+        hashtags.extend([urllib.request.unquote(hashtag.group(1)) for hashtag in hashtags_temp if hashtag is not None])
+    if "series" in event.keys():
         event_series = requests.get(
             f"https://vocadb.net/api/releaseEventSeries/{event['series']['id']}?Fields=WebLinks").json()
-        if "webLinks" not in event_series.keys():
-            spinner.fail(f"No weblinks associated with {event['name']} or its series!")
-            exit()
-        hashtags_temp = [match(r"https://twitter.com/hashtag/([^\?/]+)", link["url"]) for link in
-                         event_series["webLinks"]]
-        hashtags = [urllib.request.unquote(hashtag.group(1)) for hashtag in hashtags_temp if hashtag is not None]
+        if "webLinks" in event_series.keys():
+            hashtags_temp = [match(r"https://twitter.com/hashtag/([^\?/]+)", link["url"]) for link in
+                             event_series["webLinks"]]
+            hashtags.extend(
+                [urllib.request.unquote(hashtag.group(1)) for hashtag in hashtags_temp if hashtag is not None])
     if len(hashtags) == 0:
-        spinner.fail(f"No Twitter hashtags associated with {event['name']}!")
+        spinner.fail(f"No Twitter hashtags associated with {event['name']} or its series!")
         exit()
     spinner.succeed('Loading event data... Done.')
 
